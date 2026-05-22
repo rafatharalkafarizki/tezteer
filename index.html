@@ -4,42 +4,39 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
-StreamGrid Media | Community Video Hub
-</title>
+<title>StreamGrid Media | Community Video Hub</title>
 
-<!-- SEO -->
 <meta
 name="description"
-content="Watch community shared videos optimized for desktop and mobile devices.">
+content="Watch trending community shared videos optimized for desktop and mobile devices.">
 
-<meta
-name="robots"
-content="index, follow">
+<meta name="robots" content="index, follow">
 
-<!-- OG -->
+<!-- OPEN GRAPH -->
+<meta property="og:site_name" content="StreamGrid Media">
 <meta property="og:title" content="Community Video Stream">
 <meta property="og:description" content="Watch trending community shared media clips.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://yourdomain.com/cover.jpg">
+
+<!-- TWITTER -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Community Video Stream">
+<meta name="twitter:description" content="Watch trending community shared media clips.">
+<meta name="twitter:image" content="https://yourdomain.com/cover.jpg">
+
+<!-- CANONICAL -->
+<link rel="canonical" href="https://yourdomain.com/">
 
 <!-- TAILWIND -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- ICON -->
+<!-- ICONS -->
 <script src="https://unpkg.com/lucide@latest"></script>
 
-<!-- FONT -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link
-rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
+<!-- GOOGLE FONT -->
 <link
 href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
 rel="stylesheet">
@@ -47,170 +44,146 @@ rel="stylesheet">
 <style>
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 body{
-font-family:'Inter',sans-serif;
-background:#050505;
-color:white;
-overflow-x:hidden;
+    font-family:'Inter',sans-serif;
+    background:#050505;
+    color:#fff;
+    overflow-x:hidden;
 }
 
 /* GRID BG */
 .bg-grid{
-background-image:
-linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-background-size:40px 40px;
+    background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+
+    background-size:40px 40px;
 }
 
 /* GLASS */
 .glass{
-background:rgba(255,255,255,0.04);
-backdrop-filter:blur(14px);
-border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.04);
+    backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+/* VIDEO WRAPPER */
+.video-wrapper{
+    width:100%;
+    background:#000;
+    border-radius:24px;
+    overflow:hidden;
+    position:relative;
 }
 
 /* VIDEO */
-.video-wrapper{
-position:relative;
-width:100%;
-aspect-ratio:16/9;
-background:black;
-border-radius:24px;
-overflow:hidden;
-}
-
-/* VIDEO PLAYER */
 video{
-width:100%;
-height:100%;
-object-fit:contain;
-background:black;
-display:block;
+    width:100%;
+    height:auto;
+    display:block;
+    background:#000;
+    object-fit:contain;
+    min-height:240px;
+    max-height:75vh;
 }
 
-/* BIG PLAY */
-.big-play-button{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:120px;
-height:120px;
-border-radius:32px;
-background:linear-gradient(135deg,#ff3131,#e11d48);
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-z-index:50;
-transition:.25s ease;
-box-shadow:
-0 25px 50px rgba(255,0,60,.35),
-0 0 40px rgba(255,0,60,.25);
+/* BIG PLAY BUTTON */
+#bigPlayButton{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:5;
+    transition:.25s ease;
 }
 
-.big-play-button:hover{
-transform:translate(-50%,-50%) scale(1.06);
+#bigPlayButton.hidden{
+    opacity:0;
+    pointer-events:none;
 }
 
-.big-play-button svg{
-width:58px;
-height:58px;
-fill:white;
-margin-left:6px;
+.play-button-inner{
+    width:110px;
+    height:110px;
+    border-radius:30px;
+
+    background:
+    linear-gradient(
+    135deg,
+    #ff3131,
+    #e11d48
+    );
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+    0 20px 40px rgba(255,0,60,.35);
+
+    transition:.2s ease;
 }
 
-.big-play-button.hidden{
-opacity:0;
-pointer-events:none;
+.play-button-inner:hover{
+    transform:scale(1.05);
+}
+
+.play-button-inner svg{
+    width:54px;
+    height:54px;
+    fill:#fff;
+    margin-left:5px;
 }
 
 /* ERROR */
 #errorBox{
-position:absolute;
-inset:0;
-display:none;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-background:black;
-color:#777;
-z-index:60;
+    position:absolute;
+    inset:0;
+    background:#000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    color:#888;
 }
 
-/* NATIVE AD */
-.native-ad{
-display:flex;
-gap:20px;
-align-items:center;
-padding:22px;
-border-radius:24px;
-background:rgba(255,255,255,0.04);
-border:1px solid rgba(255,255,255,0.06);
+/* AD */
+.ad-box{
+    width:100%;
+    min-height:90px;
+    border-radius:16px;
+    overflow:hidden;
 }
 
-.native-ad img{
-width:180px;
-height:110px;
-object-fit:cover;
-border-radius:18px;
-}
-
-.native-tag{
-display:inline-flex;
-font-size:10px;
-font-weight:700;
-padding:4px 8px;
-background:#facc15;
-color:black;
-border-radius:999px;
-margin-bottom:10px;
-text-transform:uppercase;
-}
-
-.native-btn{
-display:inline-flex;
-padding:12px 18px;
-background:#dc2626;
-border-radius:14px;
-font-weight:700;
-transition:.2s ease;
-text-decoration:none;
-color:white;
-}
-
-.native-btn:hover{
-background:#ef4444;
-}
-
-/* RELATED */
+/* CARD */
 .related-card{
-transition:.25s ease;
-cursor:pointer;
+    transition:.25s ease;
 }
 
 .related-card:hover{
-transform:translateY(-4px);
+    transform:translateY(-4px);
 }
 
-.fade{
-animation:fade .4s ease;
+/* MOBILE */
+@media(max-width:768px){
+
+.play-button-inner{
+    width:85px;
+    height:85px;
+    border-radius:24px;
 }
 
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(10px);
+.play-button-inner svg{
+    width:42px;
+    height:42px;
 }
-to{
-opacity:1;
-transform:translateY(0);
-}
+
 }
 
 </style>
@@ -224,10 +197,9 @@ transform:translateY(0);
 
 <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
 
-<!-- LOGO -->
 <div class="flex items-center gap-3">
 
-<div class="w-11 h-11 rounded-2xl bg-red-600 flex items-center justify-center">
+<div class="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center">
 
 <i data-lucide="play" class="w-5 h-5"></i>
 
@@ -235,7 +207,7 @@ transform:translateY(0);
 
 <div>
 
-<h1 class="font-extrabold text-xl">
+<h1 class="font-extrabold text-lg tracking-wide">
 StreamGrid
 </h1>
 
@@ -247,7 +219,6 @@ Community Video Hub
 
 </div>
 
-<!-- NAV -->
 <nav class="hidden md:flex items-center gap-8 text-sm text-gray-300">
 
 <a href="#" class="hover:text-white transition">
@@ -278,12 +249,11 @@ Community Uploads
 <div class="grid lg:grid-cols-3 gap-8">
 
 <!-- LEFT -->
-<div class="lg:col-span-2 fade">
+<div class="lg:col-span-2">
 
-<!-- VIDEO -->
+<!-- VIDEO PLAYER -->
 <div class="video-wrapper glass">
 
-<!-- VIDEO -->
 <video
 id="mainPlayer"
 controls
@@ -292,13 +262,17 @@ preload="metadata">
 </video>
 
 <!-- BIG PLAY -->
-<div id="bigPlayButton" class="big-play-button">
+<button id="bigPlayButton">
+
+<div class="play-button-inner">
 
 <svg viewBox="0 0 24 24">
 <path d="M8 5v14l11-7z"></path>
 </svg>
 
 </div>
+
+</button>
 
 <!-- ERROR -->
 <div id="errorBox">
@@ -319,7 +293,7 @@ Video unavailable
 <!-- META -->
 <div class="mt-6">
 
-<div class="flex items-center gap-2 mb-4">
+<div class="flex items-center gap-2 mb-3">
 
 <span class="px-3 py-1 rounded-full bg-red-600/15 text-red-400 text-xs font-semibold">
 Trending
@@ -331,7 +305,7 @@ Community Upload
 
 </div>
 
-<h2 class="text-3xl md:text-4xl font-extrabold leading-tight mb-4">
+<h2 class="text-2xl md:text-3xl font-extrabold leading-tight mb-4">
 
 Featured Community Shared Video
 
@@ -343,77 +317,34 @@ Watch trending community-uploaded media optimized for desktop and mobile streami
 
 </p>
 
-<!-- STATS -->
-<div class="flex flex-wrap items-center gap-6 mt-6 text-sm text-gray-400">
-
-<div class="flex items-center gap-2">
-
-<i data-lucide="eye" class="w-4 h-4"></i>
-
-<span>
-124K Views
-</span>
-
-</div>
-
-<div class="flex items-center gap-2">
-
-<i data-lucide="thumbs-up" class="w-4 h-4"></i>
-
-<span>
-8.2K Likes
-</span>
-
-</div>
-
-<div class="flex items-center gap-2">
-
-<i data-lucide="message-circle" class="w-4 h-4"></i>
-
-<span>
-1.3K Comments
-</span>
-
-</div>
-
-</div>
-
 </div>
 
 <!-- NATIVE AD -->
 <div class="mt-8">
 
-<div class="native-ad">
+<div class="ad-box glass p-4">
+
+<div class="flex items-center gap-4">
 
 <img
-src="https://picsum.photos/400/250"
-alt="sponsor">
+src="https://picsum.photos/200/120"
+class="w-28 h-20 rounded-xl object-cover"
+alt="ad">
 
-<div class="flex-1">
+<div>
 
-<div class="native-tag">
+<p class="text-xs uppercase text-red-400 mb-1">
 Sponsored
-</div>
-
-<h3 class="text-xl font-bold mb-2">
-
-Premium Streaming Devices
-
-</h3>
-
-<p class="text-sm text-gray-400 mb-5">
-
-Upgrade your entertainment experience with ultra-fast 4K streaming hardware.
-
 </p>
+
+<h4 class="font-bold text-sm mb-2">
+Premium Streaming Devices
+</h4>
 
 <a
 href="#"
-target="_blank"
-class="native-btn">
-
-Learn More
-
+class="text-red-500 text-sm">
+Learn More →
 </a>
 
 </div>
@@ -424,14 +355,16 @@ Learn More
 
 </div>
 
+</div>
+
 <!-- SIDEBAR -->
-<div class="fade">
+<div>
 
-<div class="glass rounded-3xl p-5">
+<div class="glass rounded-2xl p-5">
 
-<div class="flex items-center justify-between mb-6">
+<div class="flex items-center justify-between mb-5">
 
-<h3 class="font-bold text-xl">
+<h3 class="font-bold text-lg">
 Related Videos
 </h3>
 
@@ -442,23 +375,22 @@ class="w-5 h-5 text-red-500">
 
 </div>
 
-<div class="space-y-5">
+<div class="space-y-4">
 
 <!-- CARD -->
-<div class="related-card">
+<div class="related-card cursor-pointer">
 
-<div class="aspect-video rounded-2xl overflow-hidden mb-3">
+<div class="aspect-video rounded-xl overflow-hidden mb-3 bg-zinc-900">
 
 <img
 src="https://picsum.photos/500/300?1"
-class="w-full h-full object-cover">
+class="w-full h-full object-cover"
+alt="thumb">
 
 </div>
 
 <h4 class="font-semibold text-sm">
-
 Top Trending Community Clip
-
 </h4>
 
 <p class="text-xs text-gray-500 mt-1">
@@ -468,20 +400,19 @@ Top Trending Community Clip
 </div>
 
 <!-- CARD -->
-<div class="related-card">
+<div class="related-card cursor-pointer">
 
-<div class="aspect-video rounded-2xl overflow-hidden mb-3">
+<div class="aspect-video rounded-xl overflow-hidden mb-3 bg-zinc-900">
 
 <img
 src="https://picsum.photos/500/300?2"
-class="w-full h-full object-cover">
+class="w-full h-full object-cover"
+alt="thumb">
 
 </div>
 
 <h4 class="font-semibold text-sm">
-
 Entertainment Highlights
-
 </h4>
 
 <p class="text-xs text-gray-500 mt-1">
@@ -501,31 +432,19 @@ Entertainment Highlights
 </main>
 
 <!-- FOOTER -->
-<footer class="border-t border-white/5 mt-16">
+<footer class="border-t border-white/5 mt-14">
 
-<div class="max-w-7xl mx-auto px-4 py-12">
-
-<div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+<div class="max-w-7xl mx-auto px-4 py-8 text-sm text-gray-500 flex flex-col md:flex-row items-center justify-between gap-4">
 
 <p>
-© 2026 StreamGrid Media. All rights reserved.
+© 2026 StreamGrid Media
 </p>
 
-<div class="flex items-center gap-5">
+<div class="flex gap-5">
 
-<a href="#">
-Privacy
-</a>
-
-<a href="#">
-Terms
-</a>
-
-<a href="#">
-Contact
-</a>
-
-</div>
+<a href="#">Privacy</a>
+<a href="#">Terms</a>
+<a href="#">Contact</a>
 
 </div>
 
@@ -548,69 +467,48 @@ document.getElementById("errorBox");
 const bigPlayButton =
 document.getElementById("bigPlayButton");
 
-/*
-URL:
-
-domain.com/?v=abc123
-domain.com/?v=abc123.mp4
-*/
-
-const params =
-new URLSearchParams(window.location.search);
-
+/* GET VIDEO ID */
 let videoId =
-params.get("v");
+window.location.pathname
+.split("/")
+.pop()
+.trim();
 
-/* CHECK VIDEO */
+/* CLEAN */
 if(
-videoId &&
+videoId === "" ||
+videoId === "index.html"
+){
+videoId = "";
+}
+
+/* LOAD VIDEO */
+if(
 /^[a-zA-Z0-9_.-]{3,80}$/.test(videoId)
+&&
+videoId !== ""
 ){
 
 let filename =
-videoId.endsWith(".mp4")
+videoId.includes(".")
 ? videoId
 : videoId + ".mp4";
 
-/* VIDEY URL */
 let videoUrl =
 "https://cdn.videy.co/" +
 encodeURIComponent(filename);
 
-console.log(videoUrl);
-
-/* LOAD VIDEO */
+/* SET SOURCE */
 player.src = videoUrl;
 
-player.load();
-
-/* ERROR */
+/* ERROR HANDLER */
 player.addEventListener("error", () => {
 
 player.style.display = "none";
 
+bigPlayButton.style.display = "none";
+
 errorBox.style.display = "flex";
-
-});
-
-/* PLAY BUTTON */
-bigPlayButton.addEventListener("click", () => {
-
-player.play();
-
-bigPlayButton.classList.add("hidden");
-
-});
-
-player.addEventListener("play", () => {
-
-bigPlayButton.classList.add("hidden");
-
-});
-
-player.addEventListener("pause", () => {
-
-bigPlayButton.classList.remove("hidden");
 
 });
 
@@ -623,6 +521,27 @@ bigPlayButton.style.display = "none";
 errorBox.style.display = "flex";
 
 }
+
+/* PLAY BUTTON */
+bigPlayButton.addEventListener("click", () => {
+
+player.play();
+
+});
+
+/* HIDE BUTTON */
+player.addEventListener("play", () => {
+
+bigPlayButton.classList.add("hidden");
+
+});
+
+/* SHOW BUTTON */
+player.addEventListener("pause", () => {
+
+bigPlayButton.classList.remove("hidden");
+
+});
 
 </script>
 
