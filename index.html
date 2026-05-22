@@ -2,51 +2,34 @@
 <html lang="en">
 <head>
 
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 
 <meta
 name="viewport"
-content="width=device-width, initial-scale=1.0" />
+content="width=device-width, initial-scale=1.0">
 
 <title>
 StreamGrid Media | Community Video Hub
 </title>
 
+<!-- SEO -->
 <meta
 name="description"
-content="Watch community shared videos optimized for desktop and mobile devices." />
-
-<meta
-name="author"
-content="StreamGrid Media" />
+content="Watch community shared videos optimized for desktop and mobile devices.">
 
 <meta
 name="robots"
-content="index, follow" />
+content="index, follow">
 
-<!-- OPEN GRAPH -->
-<meta property="og:site_name" content="StreamGrid Media" />
-<meta property="og:title" content="Community Video Stream" />
-<meta property="og:description" content="Watch trending community shared media clips." />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://yourdomain.com/cover.jpg" />
-
-<!-- TWITTER -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Community Video Stream" />
-<meta name="twitter:description" content="Watch trending community shared media clips." />
-<meta name="twitter:image" content="https://yourdomain.com/cover.jpg" />
-
-<!-- CANONICAL -->
-<link rel="canonical" href="https://yourdomain.com/" />
-
-<!-- FAVICON -->
-<link rel="icon" href="/favicon.ico" />
+<!-- OG -->
+<meta property="og:title" content="Community Video Stream">
+<meta property="og:description" content="Watch trending community shared media clips.">
+<meta property="og:type" content="website">
 
 <!-- TAILWIND -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- LUCIDE -->
+<!-- ICON -->
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <!-- FONT -->
@@ -76,7 +59,7 @@ color:white;
 overflow-x:hidden;
 }
 
-/* BACKGROUND GRID */
+/* GRID BG */
 .bg-grid{
 background-image:
 linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
@@ -93,53 +76,51 @@ border:1px solid rgba(255,255,255,0.08);
 
 /* VIDEO */
 .video-wrapper{
+position:relative;
 width:100%;
+aspect-ratio:16/9;
 background:black;
 border-radius:24px;
 overflow:hidden;
-position:relative;
 }
 
-.video-container{
-position:relative;
-}
-
+/* VIDEO PLAYER */
 video{
 width:100%;
-max-height:75vh;
-background:black;
+height:100%;
 object-fit:contain;
+background:black;
 display:block;
 }
 
-/* BIG PLAY BUTTON */
+/* BIG PLAY */
 .big-play-button{
 position:absolute;
 top:50%;
 left:50%;
-transform:translate(-50%, -50%);
+transform:translate(-50%,-50%);
 width:120px;
 height:120px;
-border-radius:34px;
+border-radius:32px;
 background:linear-gradient(135deg,#ff3131,#e11d48);
 display:flex;
 align-items:center;
 justify-content:center;
 cursor:pointer;
-z-index:20;
-transition:all .25s ease;
+z-index:50;
+transition:.25s ease;
 box-shadow:
 0 25px 50px rgba(255,0,60,.35),
 0 0 40px rgba(255,0,60,.25);
 }
 
 .big-play-button:hover{
-transform:translate(-50%, -50%) scale(1.05);
+transform:translate(-50%,-50%) scale(1.06);
 }
 
 .big-play-button svg{
-width:56px;
-height:56px;
+width:58px;
+height:58px;
 fill:white;
 margin-left:6px;
 }
@@ -149,47 +130,58 @@ opacity:0;
 pointer-events:none;
 }
 
+/* ERROR */
+#errorBox{
+position:absolute;
+inset:0;
+display:none;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+background:black;
+color:#777;
+z-index:60;
+}
+
 /* NATIVE AD */
 .native-ad{
 display:flex;
-gap:18px;
+gap:20px;
 align-items:center;
-padding:20px;
+padding:22px;
 border-radius:24px;
 background:rgba(255,255,255,0.04);
 border:1px solid rgba(255,255,255,0.06);
 }
 
 .native-ad img{
-width:160px;
-height:100px;
+width:180px;
+height:110px;
 object-fit:cover;
 border-radius:18px;
 }
 
 .native-tag{
+display:inline-flex;
 font-size:10px;
 font-weight:700;
+padding:4px 8px;
 background:#facc15;
 color:black;
-padding:4px 8px;
 border-radius:999px;
-display:inline-flex;
 margin-bottom:10px;
 text-transform:uppercase;
 }
 
 .native-btn{
 display:inline-flex;
-align-items:center;
-justify-content:center;
 padding:12px 18px;
-border-radius:14px;
 background:#dc2626;
-color:white;
+border-radius:14px;
 font-weight:700;
 transition:.2s ease;
 text-decoration:none;
+color:white;
 }
 
 .native-btn:hover{
@@ -206,7 +198,6 @@ cursor:pointer;
 transform:translateY(-4px);
 }
 
-/* ANIMATION */
 .fade{
 animation:fade .4s ease;
 }
@@ -244,7 +235,7 @@ transform:translateY(0);
 
 <div>
 
-<h1 class="font-extrabold text-xl tracking-wide">
+<h1 class="font-extrabold text-xl">
 StreamGrid
 </h1>
 
@@ -292,8 +283,7 @@ Community Uploads
 <!-- VIDEO -->
 <div class="video-wrapper glass">
 
-<div class="video-container">
-
+<!-- VIDEO -->
 <video
 id="mainPlayer"
 controls
@@ -301,7 +291,7 @@ playsinline
 preload="metadata">
 </video>
 
-<!-- BIG PLAY BUTTON -->
+<!-- BIG PLAY -->
 <div id="bigPlayButton" class="big-play-button">
 
 <svg viewBox="0 0 24 24">
@@ -311,17 +301,16 @@ preload="metadata">
 </div>
 
 <!-- ERROR -->
-<div
-id="errorBox"
-class="hidden absolute inset-0 flex-col items-center justify-center bg-black text-gray-500">
+<div id="errorBox">
 
-<i data-lucide="video-off" class="w-12 h-12 mb-4"></i>
+<i
+data-lucide="video-off"
+class="w-12 h-12 mb-4">
+</i>
 
 <p>
 Video unavailable
 </p>
-
-</div>
 
 </div>
 
@@ -414,7 +403,7 @@ Premium Streaming Devices
 
 <p class="text-sm text-gray-400 mb-5">
 
-Upgrade your entertainment experience with modern 4K streaming hardware optimized for ultra-fast playback.
+Upgrade your entertainment experience with ultra-fast 4K streaming hardware.
 
 </p>
 
@@ -426,73 +415,6 @@ class="native-btn">
 Learn More
 
 </a>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- COMMENTS -->
-<div class="mt-10 glass rounded-3xl p-6">
-
-<h3 class="font-bold text-xl mb-8">
-Community Discussion
-</h3>
-
-<div class="space-y-7">
-
-<!-- COMMENT -->
-<div class="border-b border-white/5 pb-6">
-
-<div class="flex items-center gap-3 mb-3">
-
-<div class="w-11 h-11 rounded-full bg-red-500"></div>
-
-<div>
-
-<p class="font-semibold">
-Michael R.
-</p>
-
-<p class="text-xs text-gray-500">
-2 hours ago
-</p>
-
-</div>
-
-</div>
-
-<p class="text-gray-300">
-Great streaming quality on mobile.
-</p>
-
-</div>
-
-<!-- COMMENT -->
-<div class="border-b border-white/5 pb-6">
-
-<div class="flex items-center gap-3 mb-3">
-
-<div class="w-11 h-11 rounded-full bg-blue-500"></div>
-
-<div>
-
-<p class="font-semibold">
-Jessica W.
-</p>
-
-<p class="text-xs text-gray-500">
-5 hours ago
-</p>
-
-</div>
-
-</div>
-
-<p class="text-gray-300">
-Fast loading and smooth playback.
-</p>
 
 </div>
 
@@ -513,7 +435,10 @@ Fast loading and smooth playback.
 Related Videos
 </h3>
 
-<i data-lucide="trending-up" class="w-5 h-5 text-red-500"></i>
+<i
+data-lucide="trending-up"
+class="w-5 h-5 text-red-500">
+</i>
 
 </div>
 
@@ -530,7 +455,7 @@ class="w-full h-full object-cover">
 
 </div>
 
-<h4 class="font-semibold text-sm leading-relaxed">
+<h4 class="font-semibold text-sm">
 
 Top Trending Community Clip
 
@@ -553,7 +478,7 @@ class="w-full h-full object-cover">
 
 </div>
 
-<h4 class="font-semibold text-sm leading-relaxed">
+<h4 class="font-semibold text-sm">
 
 Entertainment Highlights
 
@@ -561,29 +486,6 @@ Entertainment Highlights
 
 <p class="text-xs text-gray-500 mt-1">
 29K views
-</p>
-
-</div>
-
-<!-- CARD -->
-<div class="related-card">
-
-<div class="aspect-video rounded-2xl overflow-hidden mb-3">
-
-<img
-src="https://picsum.photos/500/300?3"
-class="w-full h-full object-cover">
-
-</div>
-
-<h4 class="font-semibold text-sm leading-relaxed">
-
-Popular User Upload
-
-</h4>
-
-<p class="text-xs text-gray-500 mt-1">
-18K views
 </p>
 
 </div>
@@ -603,77 +505,7 @@ Popular User Upload
 
 <div class="max-w-7xl mx-auto px-4 py-12">
 
-<div class="grid md:grid-cols-4 gap-10">
-
-<div>
-
-<h4 class="font-bold text-lg mb-3">
-StreamGrid
-</h4>
-
-<p class="text-sm text-gray-500 leading-relaxed">
-
-Community video streaming platform optimized for modern devices and social sharing.
-
-</p>
-
-</div>
-
-<div>
-
-<h5 class="font-semibold mb-3">
-Platform
-</h5>
-
-<ul class="space-y-2 text-sm text-gray-500">
-
-<li><a href="#">Trending</a></li>
-<li><a href="#">Popular</a></li>
-<li><a href="#">Recent Uploads</a></li>
-
-</ul>
-
-</div>
-
-<div>
-
-<h5 class="font-semibold mb-3">
-Legal
-</h5>
-
-<ul class="space-y-2 text-sm text-gray-500">
-
-<li><a href="/privacy.html">Privacy Policy</a></li>
-<li><a href="/terms.html">Terms of Service</a></li>
-<li><a href="/dmca.html">DMCA</a></li>
-
-</ul>
-
-</div>
-
-<div>
-
-<h5 class="font-semibold mb-3">
-Contact
-</h5>
-
-<ul class="space-y-2 text-sm text-gray-500">
-
-<li>
-support@yourdomain.com
-</li>
-
-<li>
-United States
-</li>
-
-</ul>
-
-</div>
-
-</div>
-
-<div class="border-t border-white/5 mt-10 pt-6 text-sm text-gray-600 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
 
 <p>
 © 2026 StreamGrid Media. All rights reserved.
@@ -681,9 +513,17 @@ United States
 
 <div class="flex items-center gap-5">
 
-<a href="#">Privacy</a>
-<a href="#">Terms</a>
-<a href="#">Contact</a>
+<a href="#">
+Privacy
+</a>
+
+<a href="#">
+Terms
+</a>
+
+<a href="#">
+Contact
+</a>
 
 </div>
 
@@ -698,6 +538,7 @@ United States
 
 lucide.createIcons();
 
+/* ELEMENT */
 const player =
 document.getElementById("mainPlayer");
 
@@ -708,7 +549,7 @@ const bigPlayButton =
 document.getElementById("bigPlayButton");
 
 /*
-CARA PAKAI:
+URL:
 
 domain.com/?v=abc123
 domain.com/?v=abc123.mp4
@@ -717,8 +558,10 @@ domain.com/?v=abc123.mp4
 const params =
 new URLSearchParams(window.location.search);
 
-let videoId = params.get("v");
+let videoId =
+params.get("v");
 
+/* CHECK VIDEO */
 if(
 videoId &&
 /^[a-zA-Z0-9_.-]{3,80}$/.test(videoId)
@@ -729,36 +572,28 @@ videoId.endsWith(".mp4")
 ? videoId
 : videoId + ".mp4";
 
+/* VIDEY URL */
 let videoUrl =
 "https://cdn.videy.co/" +
 encodeURIComponent(filename);
 
 console.log(videoUrl);
 
+/* LOAD VIDEO */
 player.src = videoUrl;
 
 player.load();
 
+/* ERROR */
 player.addEventListener("error", () => {
 
 player.style.display = "none";
 
-errorBox.classList.remove("hidden");
-errorBox.classList.add("flex");
+errorBox.style.display = "flex";
 
 });
 
-}else{
-
-player.style.display = "none";
-
-errorBox.classList.remove("hidden");
-errorBox.classList.add("flex");
-
-}
-
 /* PLAY BUTTON */
-
 bigPlayButton.addEventListener("click", () => {
 
 player.play();
@@ -778,6 +613,16 @@ player.addEventListener("pause", () => {
 bigPlayButton.classList.remove("hidden");
 
 });
+
+}else{
+
+player.style.display = "none";
+
+bigPlayButton.style.display = "none";
+
+errorBox.style.display = "flex";
+
+}
 
 </script>
 
