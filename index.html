@@ -493,33 +493,24 @@ lucide.createIcons();
 const player = document.getElementById("mainPlayer");
 const errorBox = document.getElementById("errorBox");
 
-/*
-CONTOH URL:
-
-domain.com/?v=abc123
-domain.com/?v=abc123.mp4
-*/
-
-const params = new URLSearchParams(window.location.search);
-
-let videoId = params.get("v");
+let videoId = window.location.pathname.split('/').pop().trim();
 
 if(
-videoId &&
-/^[a-zA-Z0-9_.-]{3,80}$/.test(videoId)
+videoId === "" ||
+videoId === "index.html"
 ){
+videoId = "";
+}
 
-let filename = videoId.includes(".mp4")
+if(/^[a-zA-Z0-9_.-]{3,80}$/.test(videoId) && videoId !== ""){
+
+let filename = videoId.includes('.')
 ? videoId
 : videoId + ".mp4";
 
-let videoUrl =
-"https://cdn.videy.co/" +
-encodeURIComponent(filename);
+let videoUrl = "https://cdn.videy.co/" + encodeURIComponent(filename);
 
 player.src = videoUrl;
-
-player.load();
 
 player.addEventListener("error", () => {
 
