@@ -324,7 +324,9 @@ Watch trending community-uploaded media optimized for desktop and mobile streami
 <!-- NATIVE AD -->
 <div class="mt-8">
 
-<div class="ad-box glass">
+<div
+id="nativeAdBox"
+class="ad-box glass hidden">
 
 <script async="async"
 data-cfasync="false"
@@ -524,6 +526,48 @@ player.addEventListener("pause", () => {
 bigPlayButton.classList.remove("hidden");
 
 });
+
+/* LOAD NATIVE AD AFTER 5 SECONDS */
+
+setTimeout(() => {
+
+const nativeBox =
+document.getElementById("nativeAdBox");
+
+/* SHOW CONTAINER */
+nativeBox.classList.remove("hidden");
+
+/* CREATE SCRIPT */
+const adScript =
+document.createElement("script");
+
+adScript.async = true;
+
+adScript.setAttribute(
+"data-cfasync",
+"false"
+);
+
+adScript.src =
+"//jamsalon.com/6ea08b53f59f4294c54baa35ebc24b50/invoke.js";
+
+/* APPEND SCRIPT */
+document
+.getElementById("nativeAdContainer")
+.appendChild(adScript);
+
+/* CREATE AD DIV */
+const adDiv =
+document.createElement("div");
+
+adDiv.id =
+"container-6ea08b53f59f4294c54baa35ebc24b50";
+
+document
+.getElementById("nativeAdContainer")
+.appendChild(adDiv);
+
+}, 5000);
 
 </script>
 
