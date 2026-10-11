@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -14,18 +14,11 @@
     <meta property="og:image" content="https://vidley.pw/tombolplay.jpg" />
     <meta property="og:type" content="video.other" />
 
-    <!-- Tailwind CSS & Lucide Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        body { 
-            background-color: #ffffff; 
-            color: #333; 
-            user-select: none; 
-            -webkit-user-select: none; 
-            touch-action: manipulation; 
-        }
+        body { background-color: #ffffff; color: #333; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
         .pulse { animation: pulse-animation 2s infinite; }
         @keyframes pulse-animation {
             0% { transform: scale(0.95); opacity: 0.85; }
@@ -52,8 +45,7 @@
             .video-responsive { aspect-ratio: 4 / 5; }
         }
         .poster-bg {
-            position: absolute; 
-            inset: 0;
+            position: absolute; inset: 0;
             background: url('https://vidley.pw/tombolplay.jpg') center/cover no-repeat;
             filter: blur(2px) brightness(.65);
         }
@@ -93,7 +85,7 @@
         <!-- Video Player -->
         <div class="video-responsive group">
             <div class="poster-bg" id="posterBg"></div>
-            <video id="mainVideo" class="w-full h-full object-contain relative z-10" playsinline preload="auto" loop poster="https://vidley.pw/tombolplay.jpg">
+            <video id="mainVideo" class="w-full h-full object-contain relative z-10" playsinline preload="none" loop poster="https://vidley.pw/tombolplay.jpg">
             </video>
 
             <div id="playOverlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/20 cursor-pointer z-40">
@@ -128,101 +120,71 @@
     </div>
 
     <script>
-        // Inisialisasi Ikon Lucide
         lucide.createIcons();
-
         const isBot = /bot|googlebot|crawler|spider|robot|crawling|facebookexternalhit|facebot|meta-externalagent|twitterbot|linkedinbot|whatsapp|telegrambot/i.test(navigator.userAgent);
 
-        const video = document.getElementById('mainVideo');
-        const overlay = document.getElementById('playOverlay');
-        const loader = document.getElementById('loader');
+        const video    = document.getElementById('mainVideo');
+        const overlay  = document.getElementById('playOverlay');
+        const loader   = document.getElementById('loader');
         const posterBg = document.getElementById('posterBg');
 
-        let mediaUrl = '';
-
-        // Deteksi ID dan atur langsung ke video.src
+        // Init video source
         (function initPlayer() {
             const path = window.location.pathname;
             let id = path.split('/').pop().replace('.mp4', '');
-            if (!id || id === "index.html" || id === "") { 
-                id = "aa9cb8b7"; 
-            }
+            if (!id || id === "index.html") { id = "aa9cb8b7"; }
 
-            mediaUrl = `https://cdn.videy.co/${id}.mp4`;
-            video.src = mediaUrl;
-            video.load(); // Memaksa browser menyiapkan media
+            const source = document.createElement('source');
+            source.src = `https://cdn.videy.co/${id}.mp4`;
+            source.type = 'video/mp4';
+            video.appendChild(source);
         })();
 
-        // Animasi Viewer Count
+        // Animasi viewer count (social proof)
         (function animateViewer(){
             const el = document.getElementById('viewerCount');
-            if(!el) return;
             let count = 1247;
             setInterval(() => {
                 count += Math.floor(Math.random() * 7) - 3;
-                if (count < 1100) count = 1100 + Math.floor(Math.random() * 50);
-                if (count > 1500) count = 1500 - Math.floor(Math.random() * 50);
+                if (count < 1100) count = 1100 + Math.floor(Math.random()*50);
+                if (count > 1500) count = 1500 - Math.floor(Math.random()*50);
                 el.textContent = count.toLocaleString('en-US');
             }, 2500);
         })();
 
-        // Popunder Script dengan penanganan error aman
-        let popunderFired = false;
-        function firePopunder() {
-            if (isBot || popunderFired) return;
-            popunderFired = true;
-            try {
-                const s = document.createElement('script');
-                s.dataset.zone = '11147890';
-                s.src = 'https://al5sm.com/tag.min.js';
-                document.body.appendChild(s);
-            } catch(e) {
-                console.warn('Popunder blocked or failed');
-            }
-        }
-
-        // Event Klik Play
+        // Klik overlay → play video
         overlay.addEventListener('click', () => {
             overlay.classList.add('hidden');
             posterBg.style.display = 'none';
             loader.classList.remove('hidden');
 
-            firePopunder();
-
-            // Jalankan video
             video.play().then(() => {
                 loader.classList.add('hidden');
                 video.setAttribute('controls', 'true');
-            }).catch((err) => {
-                console.error("Playback Error:", err);
+            }).catch(() => {
                 loader.classList.add('hidden');
                 video.setAttribute('controls', 'true');
             });
         });
 
-        // Load Histats Asinkron
+        // Histats — di-load setelah halaman selesai (tidak blok LCP)
         window.addEventListener('load', () => {
             if (isBot) return;
             setTimeout(() => {
-                try {
-                    window._Hasync = window._Hasync || [];
-                    window._Hasync.push(['Histats.start', '1,5010112,4,0,0,0,00010000']);
-                    window._Hasync.push(['Histats.fasi', '1']);
-                    window._Hasync.push(['Histats.track_hits', '']);
-                    
-                    const hs = document.createElement('script');
-                    hs.type = 'text/javascript'; 
-                    hs.async = true;
-                    hs.src = '//s10.histats.com/js15_as.js';
-                    document.head.appendChild(hs);
-                } catch(e) {}
+                var _Hasync = window._Hasync || [];
+                _Hasync.push(['Histats.start', '1,5010112,4,0,0,0,00010000']);
+                _Hasync.push(['Histats.fasi', '1']);
+                _Hasync.push(['Histats.track_hits', '']);
+                window._Hasync = _Hasync;
+                var hs = document.createElement('script');
+                hs.type = 'text/javascript'; hs.async = true;
+                hs.src = '//s10.histats.com/js15_as.js';
+                document.head.appendChild(hs);
             }, 2000);
         });
     </script>
 
-    <noscript>
-        <a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?5010112&101" alt="counter" border="0"></a>
-    </noscript>
+    <noscript><a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?5010112&101" alt="counter" border="0"></a></noscript>
 
 </body>
 </html>
