@@ -148,7 +148,7 @@
         })();
 
         // ==========================================================
-        // POPUNDER + LOGIKA MUNCULKAN KONTROL SETELAH DIKLIK
+        // POPUNDER BARU (al5sm.com) + LOGIKA KONTROL
         // ==========================================================
         let popunderFired = false;
         function firePopunder() {
@@ -156,24 +156,22 @@
             popunderFired = true;
             
             try {
-                // 1. Muat script iklan
-                const s = document.createElement('script');
-                s.setAttribute('data-cfasync', 'false');
-                s.async = true;
-                s.type = 'text/javascript';
-                s.src = '//bc.cofflehexapla.com/rNWiwCGFbH9cAc/160498';
-                document.body.appendChild(s);
+                // 1. Inject script popunder baru sesuai permintaan
+                (function(s){
+                    s.dataset.zone = '12042544';
+                    s.src = 'https://al5sm.com/tag.min.js';
+                })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
 
-                // 2. Beri jeda 500ms agar script iklan sempat mengikat event click-nya terlebih dahulu
-                // Ini mencegah konflik yang membuat iklan tidak muncul
+                // 2. Beri jeda 300ms agar script iklan sempat mengikat event click-nya terlebih dahulu
+                // Ini sangat penting agar iklan terpicu pada klik BERIKUTNYA tanpa konflik
                 setTimeout(() => {
-                    // 3. Pasang listener untuk memunculkan kontrol pada klik BERIKUTNYA
-                    document.addEventListener('click', function showControlsAfterPopunder() {
+                    document.addEventListener('click', function revealControls() {
+                        // Munculkan kontrol video saat pengguna mengklik halaman (yang juga memicu popunder)
                         video.controls = true;
                         // Hapus listener setelah sekali pakai
-                        document.removeEventListener('click', showControlsAfterPopunder);
+                        document.removeEventListener('click', revealControls);
                     }, { once: true });
-                }, 500); 
+                }, 300);
 
             } catch(e) {
                 console.error("Popunder error:", e);
