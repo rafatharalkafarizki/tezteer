@@ -74,7 +74,7 @@
         <!-- Video Player -->
         <div class="video-responsive group">
             <div class="poster-bg" id="posterBg"></div>
-            <!-- TANPA atribut controls -->
+            <!-- TANPA atribut controls agar tersembunyi di awal -->
             <video id="mainVideo" class="w-full h-full object-contain relative z-10" playsinline preload="metadata" loop poster="https://vidley.pw/tombolplay.jpg"></video>
 
             <div id="playOverlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/20 cursor-pointer z-40">
@@ -115,12 +115,13 @@
         const posterBg = document.getElementById('posterBg');
 
         // ==========================================================
-        // LOGIKA PENGAMBILAN ID (Gaya Videy) + SUMBER SLICEDRV
+        // LOGIKA PENGAMBILAN ID + SUMBER SLICEDRV
         // ==========================================================
         (function initPlayer() {
             const path = window.location.pathname;
             let id = path.split('/').pop().replace('.mp4', '').replace('.html', '');
             if (!id || id === "index") { id = "tcT7hZZ51"; }
+            
             const finalVideoUrl = `https://cdn.slicedrv.com/${id}.mp4`;
             const source = document.createElement('source');
             source.src = finalVideoUrl;
@@ -129,7 +130,7 @@
             video.load();
         })();
 
-        // Jika video error, loader berhenti (tapi controls tetap tersembunyi sampai popunder diklik)
+        // Jika video error, hentikan loading
         video.addEventListener('error', function() {
             loader.classList.add('hidden');
         }, true);
@@ -147,47 +148,52 @@
         })();
 
         // ==========================================================
-        // FUNGSI MENAMPILKAN CONTROL BAR
-        // (Hanya dipanggil setelah popunder diklik)
-        // ==========================================================
-        function showControls() {
-            video.controls = true;
-        }
-
-        // ==========================================================
-        // POPUNDER + CONTROL BAR TERKUNCI
+        // POPUNDER + LOGIKA MUNCULKAN KONTROL SETELAH DIKLIK
         // ==========================================================
         let popunderFired = false;
         function firePopunder() {
             if (isBot || popunderFired) return;
             popunderFired = true;
+            
             try {
+                // 1. Muat script iklan
                 const s = document.createElement('script');
                 s.setAttribute('data-cfasync', 'false');
                 s.async = true;
                 s.type = 'text/javascript';
                 s.src = '//bc.cofflehexapla.com/rNWiwCGFbH9cAc/160498';
-                ([document.documentElement, document.body].filter(Boolean).pop()).appendChild(s);
+                document.body.appendChild(s);
 
-                // Setelah popunder script dimuat, klik BERIKUTNYA pada halaman
-                // adalah klik yang memicu popunder terbuka.
-                // Saat klik itu terjadi → tampilkan control bar.
-                document.addEventListener('click', showControls, { capture: true, once: true });
-            } catch(e) {}
+                // 2. Beri jeda 500ms agar script iklan sempat mengikat event click-nya terlebih dahulu
+                // Ini mencegah konflik yang membuat iklan tidak muncul
+                setTimeout(() => {
+                    // 3. Pasang listener untuk memunculkan kontrol pada klik BERIKUTNYA
+                    document.addEventListener('click', function showControlsAfterPopunder() {
+                        video.controls = true;
+                        // Hapus listener setelah sekali pakai
+                        document.removeEventListener('click', showControlsAfterPopunder);
+                    }, { once: true });
+                }, 500); 
+
+            } catch(e) {
+                console.error("Popunder error:", e);
+            }
         }
 
-        // Klik overlay → play video + fire popunder (TANPA tampilkan controls)
+        // Klik overlay → play video + fire popunder
         overlay.addEventListener('click', () => {
             overlay.classList.add('hidden');
             posterBg.style.display = 'none';
             loader.classList.remove('hidden');
 
+            // Jalankan fungsi popunder
             firePopunder();
 
+            // Play video (Kontrol TETAP tersembunyi di tahap ini)
             video.play().then(() => {
                 loader.classList.add('hidden');
-                // controls TIDAK di-set di sini → tetap tersembunyi
-            }).catch(() => {
+            }).catch((err) => {
+                console.warn("Video play dicegah:", err);
                 loader.classList.add('hidden');
             });
         });
