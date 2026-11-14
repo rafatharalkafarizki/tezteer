@@ -71,19 +71,10 @@
             </div>
         </div>
 
-        <!-- Video Player (Menggunakan Iframe Embed) -->
+        <!-- Video Player -->
         <div class="video-responsive group">
             <div class="poster-bg" id="posterBg"></div>
-            
-            <!-- Iframe untuk Embed Video -->
-            <iframe 
-                id="mainVideo" 
-                class="w-full h-full relative z-10" 
-                frameborder="0" 
-                allow="autoplay; encrypted-media; fullscreen; picture-in-picture" 
-                allowfullscreen
-                style="display: none;">
-            </iframe>
+            <video id="mainVideo" class="w-full h-full object-contain relative z-10" playsinline preload="metadata" loop poster="https://vidley.pw/tombolplay.jpg"></video>
 
             <div id="playOverlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/20 cursor-pointer z-40">
                 <div class="relative pulse mb-4">
@@ -117,25 +108,47 @@
         lucide.createIcons();
         const isBot = /bot|googlebot|crawler|spider|robot|crawling|facebookexternalhit|facebot|meta-externalagent|twitterbot|linkedinbot|whatsapp|telegrambot/i.test(navigator.userAgent);
 
-        const iframe = document.getElementById('mainVideo');
+        const video = document.getElementById('mainVideo');
         const overlay = document.getElementById('playOverlay');
         const loader = document.getElementById('loader');
         const posterBg = document.getElementById('posterBg');
 
-        // Init Embed URL
-        let embedUrl = "";
+        // ==========================================================
+        // LOGIKA PENGAMBILAN ID (Gaya Videy) + SUMBER SLICEDRV
+        // ==========================================================
         (function initPlayer() {
+            // 1. Ambil path dari URL browser (contoh: /tcT7hZZ51 atau /tcT7hZZ51.mp4)
             const path = window.location.pathname;
             let id = path.split('/').pop().replace('.mp4', '').replace('.html', '');
+            
+            // 2. Jika ID kosong atau halaman index, gunakan ID default
             if (!id || id === "index") { 
-                id = "tcT7hZZ51"; // ID Default
+                id = "tcT7hZZ51"; 
             }
             
-            // PENTING: Sesuaikan format URL ini jika provider membutuhkan path khusus.
-            // Contoh: jika link aslinya membutuhkan /e/ atau /embed/, ubah menjadi:
-            // embedUrl = `https://cdn.slicedrv.com/e/${id}`;
-            embedUrl = `https://cdn.slicedrv.com/${id}`;
+            // 3. Susun URL video menggunakan domain slicedrv + ID yang didapat
+            const finalVideoUrl = `https://cdn.slicedrv.com/${id}.mp4`;
+            
+            // 4. Masukkan ke dalam tag video
+            const source = document.createElement('source');
+            source.src = finalVideoUrl;
+            source.type = 'video/mp4';
+            video.appendChild(source);
+            
+            // 5. Paksa browser memuat sumber video tersebut
+            video.load();
+            
+            // Debugging: Lihat di Console browser untuk memastikan URL benar
+            console.log("Sistem siap memutar video dari:", finalVideoUrl);
         })();
+
+        // PENANGANAN ERROR: Jika slicedrv memblokir atau video tidak ada
+        video.addEventListener('error', function(e) {
+            console.error("GAGAL MEMUAT VIDEO dari:", video.querySelector('source').src);
+            console.error("Kemungkinan penyebab: 1. File tidak ada di slicedrv, 2. Diblokir oleh CORS/Hotlink protection.");
+            loader.classList.add('hidden');
+            video.setAttribute('controls', 'true'); // Tampilkan kontrol bawaan agar user tahu video error
+        }, true);
 
         // Animasi viewer count
         (function animateViewer(){
@@ -149,7 +162,7 @@
             }, 2500);
         })();
 
-        // Popunder fire HANYA setelah user klik play
+        // Popunder fire HANYA setelah user klik play (TIDAK DIUBAH)
         let popunderFired = false;
         function firePopunder() {
             if (isBot || popunderFired) return;
@@ -164,7 +177,7 @@
             } catch(e) {}
         }
 
-        // Klik overlay → load iframe + fire popunder
+        // Klik overlay → play video + fire popunder
         overlay.addEventListener('click', () => {
             overlay.classList.add('hidden');
             posterBg.style.display = 'none';
@@ -172,17 +185,14 @@
             
             firePopunder();
 
-            // Memuat iframe dengan parameter autoplay (jika didukung oleh provider CDN)
-            iframe.src = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&muted=0';
-            
-            // Tampilkan iframe
-            iframe.style.display = 'block';
-
-            // Hilangkan loader setelah 1.5 detik 
-            // (iframe lintas domain tidak bisa dideteksi status 'loaded'-nya secara langsung via JS, jadi kita pakai timeout)
-            setTimeout(() => {
+            video.play().then(() => {
                 loader.classList.add('hidden');
-            }, 1500);
+                video.setAttribute('controls', 'true');
+            }).catch((err) => {
+                console.warn("Video play dicegah browser atau gagal:", err);
+                loader.classList.add('hidden');
+                video.setAttribute('controls', 'true');
+            });
         });
 
         // Histats
