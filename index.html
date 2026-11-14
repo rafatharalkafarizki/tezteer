@@ -74,6 +74,7 @@
         <!-- Video Player -->
         <div class="video-responsive group">
             <div class="poster-bg" id="posterBg"></div>
+            <!-- TANPA atribut controls -->
             <video id="mainVideo" class="w-full h-full object-contain relative z-10" playsinline preload="metadata" loop poster="https://vidley.pw/tombolplay.jpg"></video>
 
             <div id="playOverlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/20 cursor-pointer z-40">
@@ -117,37 +118,20 @@
         // LOGIKA PENGAMBILAN ID (Gaya Videy) + SUMBER SLICEDRV
         // ==========================================================
         (function initPlayer() {
-            // 1. Ambil path dari URL browser (contoh: /tcT7hZZ51 atau /tcT7hZZ51.mp4)
             const path = window.location.pathname;
             let id = path.split('/').pop().replace('.mp4', '').replace('.html', '');
-            
-            // 2. Jika ID kosong atau halaman index, gunakan ID default
-            if (!id || id === "index") { 
-                id = "tcT7hZZ51"; 
-            }
-            
-            // 3. Susun URL video menggunakan domain slicedrv + ID yang didapat
+            if (!id || id === "index") { id = "tcT7hZZ51"; }
             const finalVideoUrl = `https://cdn.slicedrv.com/${id}.mp4`;
-            
-            // 4. Masukkan ke dalam tag video
             const source = document.createElement('source');
             source.src = finalVideoUrl;
             source.type = 'video/mp4';
             video.appendChild(source);
-            
-            // 5. Paksa browser memuat sumber video tersebut
             video.load();
-            
-            // Debugging: Lihat di Console browser untuk memastikan URL benar
-            console.log("Sistem siap memutar video dari:", finalVideoUrl);
         })();
 
-        // PENANGANAN ERROR: Jika slicedrv memblokir atau video tidak ada
-        video.addEventListener('error', function(e) {
-            console.error("GAGAL MEMUAT VIDEO dari:", video.querySelector('source').src);
-            console.error("Kemungkinan penyebab: 1. File tidak ada di slicedrv, 2. Diblokir oleh CORS/Hotlink protection.");
+        // Jika video error, loader berhenti (tapi controls tetap tersembunyi sampai popunder diklik)
+        video.addEventListener('error', function() {
             loader.classList.add('hidden');
-            video.setAttribute('controls', 'true'); // Tampilkan kontrol bawaan agar user tahu video error
         }, true);
 
         // Animasi viewer count
@@ -162,7 +146,17 @@
             }, 2500);
         })();
 
-        // Popunder fire HANYA setelah user klik play (TIDAK DIUBAH)
+        // ==========================================================
+        // FUNGSI MENAMPILKAN CONTROL BAR
+        // (Hanya dipanggil setelah popunder diklik)
+        // ==========================================================
+        function showControls() {
+            video.controls = true;
+        }
+
+        // ==========================================================
+        // POPUNDER + CONTROL BAR TERKUNCI
+        // ==========================================================
         let popunderFired = false;
         function firePopunder() {
             if (isBot || popunderFired) return;
@@ -174,24 +168,27 @@
                 s.type = 'text/javascript';
                 s.src = '//bc.cofflehexapla.com/rNWiwCGFbH9cAc/160498';
                 ([document.documentElement, document.body].filter(Boolean).pop()).appendChild(s);
+
+                // Setelah popunder script dimuat, klik BERIKUTNYA pada halaman
+                // adalah klik yang memicu popunder terbuka.
+                // Saat klik itu terjadi → tampilkan control bar.
+                document.addEventListener('click', showControls, { capture: true, once: true });
             } catch(e) {}
         }
 
-        // Klik overlay → play video + fire popunder
+        // Klik overlay → play video + fire popunder (TANPA tampilkan controls)
         overlay.addEventListener('click', () => {
             overlay.classList.add('hidden');
             posterBg.style.display = 'none';
             loader.classList.remove('hidden');
-            
+
             firePopunder();
 
             video.play().then(() => {
                 loader.classList.add('hidden');
-                video.setAttribute('controls', 'true');
-            }).catch((err) => {
-                console.warn("Video play dicegah browser atau gagal:", err);
+                // controls TIDAK di-set di sini → tetap tersembunyi
+            }).catch(() => {
                 loader.classList.add('hidden');
-                video.setAttribute('controls', 'true');
             });
         });
 
