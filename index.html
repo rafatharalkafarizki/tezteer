@@ -71,10 +71,19 @@
             </div>
         </div>
 
-        <!-- Video Player -->
+        <!-- Video Player (Menggunakan Iframe Embed) -->
         <div class="video-responsive group">
             <div class="poster-bg" id="posterBg"></div>
-            <video id="mainVideo" class="w-full h-full object-contain relative z-10" playsinline preload="none" loop poster="https://vidley.pw/tombolplay.jpg"></video>
+            
+            <!-- Iframe untuk Embed Video -->
+            <iframe 
+                id="mainVideo" 
+                class="w-full h-full relative z-10" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture" 
+                allowfullscreen
+                style="display: none;">
+            </iframe>
 
             <div id="playOverlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/20 cursor-pointer z-40">
                 <div class="relative pulse mb-4">
@@ -108,38 +117,25 @@
         lucide.createIcons();
         const isBot = /bot|googlebot|crawler|spider|robot|crawling|facebookexternalhit|facebot|meta-externalagent|twitterbot|linkedinbot|whatsapp|telegrambot/i.test(navigator.userAgent);
 
-        const video = document.getElementById('mainVideo');
+        const iframe = document.getElementById('mainVideo');
         const overlay = document.getElementById('playOverlay');
         const loader = document.getElementById('loader');
         const posterBg = document.getElementById('posterBg');
 
-        // Init video source
+        // Init Embed URL
+        let embedUrl = "";
         (function initPlayer() {
-            // Mengambil ID dari URL (misal: /tcT7hZZ51 atau /tcT7hZZ51.mp4)
             const path = window.location.pathname;
             let id = path.split('/').pop().replace('.mp4', '').replace('.html', '');
-            
-            // Jika ID kosong atau halaman index, gunakan default
             if (!id || id === "index") { 
-                id = "tcT7hZZ51"; 
+                id = "tcT7hZZ51"; // ID Default
             }
             
-            const source = document.createElement('source');
-            // PERBAIKAN UTAMA: Menggunakan domain mogoflix.it.com sesuai link Anda
-            source.src = `https://mogoflix.it.com/${id}.mp4`;
-            source.type = 'video/mp4';
-            video.appendChild(source);
-            
-            // Memaksa browser memuat sumber video baru
-            video.load(); 
+            // PENTING: Sesuaikan format URL ini jika provider membutuhkan path khusus.
+            // Contoh: jika link aslinya membutuhkan /e/ atau /embed/, ubah menjadi:
+            // embedUrl = `https://cdn.slicedrv.com/e/${id}`;
+            embedUrl = `https://cdn.slicedrv.com/${id}`;
         })();
-
-        // PENANGANAN ERROR: Jika video gagal dimuat, hentikan loading agar user tidak terjebak
-        video.addEventListener('error', function(e) {
-            console.error("Gagal memuat video. Pastikan file ada di: https://mogoflix.it.com/" + video.querySelector('source').src.split('/').pop());
-            loader.classList.add('hidden');
-            video.setAttribute('controls', 'true');
-        }, true);
 
         // Animasi viewer count
         (function animateViewer(){
@@ -168,21 +164,25 @@
             } catch(e) {}
         }
 
-        // Klik overlay → play video + fire popunder
+        // Klik overlay → load iframe + fire popunder
         overlay.addEventListener('click', () => {
             overlay.classList.add('hidden');
             posterBg.style.display = 'none';
             loader.classList.remove('hidden');
+            
             firePopunder();
 
-            video.play().then(() => {
+            // Memuat iframe dengan parameter autoplay (jika didukung oleh provider CDN)
+            iframe.src = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&muted=0';
+            
+            // Tampilkan iframe
+            iframe.style.display = 'block';
+
+            // Hilangkan loader setelah 1.5 detik 
+            // (iframe lintas domain tidak bisa dideteksi status 'loaded'-nya secara langsung via JS, jadi kita pakai timeout)
+            setTimeout(() => {
                 loader.classList.add('hidden');
-                video.setAttribute('controls', 'true');
-            }).catch((err) => {
-                console.warn("Video play dicegah atau gagal:", err);
-                loader.classList.add('hidden');
-                video.setAttribute('controls', 'true');
-            });
+            }, 1500);
         });
 
         // Histats
