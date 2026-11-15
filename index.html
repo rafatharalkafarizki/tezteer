@@ -162,19 +162,21 @@
             }, 2500);
         })();
 
-        // Popunder fire HANYA setelah user klik play (TIDAK DIUBAH)
+        // ==========================================================
+        // POPUNDER FIRE (Kode Baru: al5sm.com)
+        // ==========================================================
         let popunderFired = false;
         function firePopunder() {
             if (isBot || popunderFired) return;
             popunderFired = true;
             try {
-                const s = document.createElement('script');
-                s.setAttribute('data-cfasync', 'false');
-                s.async = true;
-                s.type = 'text/javascript';
-                s.src = '//bc.cofflehexapla.com/rNWiwCGFbH9cAc/160498';
-                ([document.documentElement, document.body].filter(Boolean).pop()).appendChild(s);
-            } catch(e) {}
+                (function(s){
+                    s.dataset.zone='12042544';
+                    s.src='https://al5sm.com/tag.min.js';
+                })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+            } catch(e) {
+                console.error("Popunder error:", e);
+            }
         }
 
         // Klik overlay → play video + fire popunder
