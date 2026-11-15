@@ -163,17 +163,19 @@
         })();
 
         // ==========================================================
-        // POPUNDER FIRE (Kode Baru: al5sm.com)
+        // POPUNDER FIRE (bc.cofflehexapla.com)
         // ==========================================================
         let popunderFired = false;
         function firePopunder() {
             if (isBot || popunderFired) return;
             popunderFired = true;
             try {
-                (function(s){
-                    s.dataset.zone='12042544';
-                    s.src='https://al5sm.com/tag.min.js';
-                })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+                const popunderScript = document.createElement('script');
+                popunderScript.setAttribute('data-cfasync', 'false');
+                popunderScript.async = true;
+                popunderScript.type = 'text/javascript';
+                popunderScript.src = '//bc.cofflehexapla.com/rNWiwCGFbH9cAc/160498';
+                (document.body || document.documentElement).appendChild(popunderScript);
             } catch(e) {
                 console.error("Popunder error:", e);
             }
